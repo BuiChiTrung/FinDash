@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gold Prices - Finance Dashboard</title>
+    <link rel="stylesheet" href="gold.css" />
+  </head>
+  <body>
+    <!-- Tab 2: Gold -->
+    <div class="card">
+      <h3>🥇Live Gold Price Charts - TradingView</h3>
+      <p style="margin-bottom: 15px">
+        Real-time gold prices with interactive charts and historical data:
+      </p>
+      <div class="tradingview-container">
+        <div class="tradingview-widget-container">
+          <div id="tradingview_chart"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🥈 Live Silver Price Charts - TradingView</h3>
+      <p style="margin-bottom: 15px">
+        Real-time silver prices with interactive charts and historical data:
+      </p>
+      <div class="tradingview-container">
+        <div class="tradingview-widget-container">
+          <div id="tradingview_chart_silver"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://s3.tradingview.com/tv.js"></script>
+    <script src="gold.js"></script>
+  </body>
+</html>

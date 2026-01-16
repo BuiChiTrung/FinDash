@@ -1,0 +1,149 @@
+* {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #ffffff;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 100vh;
+      }
+
+      /* Cards and Sections */
+      .card {
+        background: #ffffff;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 24px;
+        margin: 40px;
+        margin-top: 0;
+        margin-bottom: 24px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+      }
+
+      .card:first-child {
+        margin-top: 40px;
+      }
+
+      .card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+
+      .card h3 {
+        font-size: 18px;
+        color: #1a1a1a;
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+
+      .card p {
+        color: #666;
+        font-size: 14px;
+      }
+
+      /* Iframe Styles */
+      .iframe-container {
+        width: 100%;
+        height: calc(100vh - 200px);
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        margin-bottom: 24px;
+      }
+
+      .iframe-container iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+
+      /* Link Card */
+      .link-card {
+        background: linear-gradient(135deg, #1e3799 0%, #1e3799 100%);
+        color: white;
+        padding: 40px;
+        border-radius: 8px;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: block;
+        cursor: pointer;
+      }
+
+      .link-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(12, 36, 97, 0.2);
+        text-decoration: none;
+      }
+
+      .link-card h4 {
+        font-size: 22px;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+
+      .link-card p {
+        font-size: 14px;
+        opacity: 0.9;
+        margin-bottom: 15px;
+        color: white;
+      }
+
+      .link-card .button {
+        display: inline-block;
+        padding: 10px 24px;
+        background-color: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 4px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        font-size: 14px;
+      }
+
+      .link-card .button:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        border-color: white;
+      }
+
+      /* Price Grid */
+      .price-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .card {
+          margin: 20px;
+          padding: 16px;
+        }
+
+        .iframe-container {
+          height: 500px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .card {
+          margin: 15px;
+          padding: 16px;
+        }
+
+        .card h3 {
+          font-size: 16px;
+        }
+
+        .iframe-container {
+          height: 400px;
+        }
+      }
