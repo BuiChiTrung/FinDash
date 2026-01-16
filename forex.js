@@ -3,6 +3,60 @@ const API_URL =
   "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1";
 const API_FALLBACK = "https://latest.currency-api.pages.dev/v1";
 
+// Cache Configuration
+const CACHE_KEY_PREFIX = "findash_forex_cache_";
+const CACHE_EXPIRY_DAYS = 1; // Cache expires after 1 day
+
+// Helper function to generate cache key for a currency pair
+function getCacheKey(from, to, days) {
+  return `${CACHE_KEY_PREFIX}${from}_${to}_${days}`;
+}
+
+// Helper function to check if cache is still valid
+function isCacheValid(cacheKey) {
+  const cached = localStorage.getItem(cacheKey);
+  if (!cached) return false;
+
+  try {
+    const data = JSON.parse(cached);
+    const cacheTime = data.timestamp;
+    const now = new Date().getTime();
+    const expiryTime = CACHE_EXPIRY_DAYS * 24 * 60 * 60 * 1000;
+
+    return now - cacheTime < expiryTime;
+  } catch (e) {
+    return false;
+  }
+}
+
+// Helper function to get cached data
+function getCachedData(cacheKey) {
+  try {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached && isCacheValid(cacheKey)) {
+      return JSON.parse(cached).data;
+    }
+  } catch (e) {
+    console.error("Error reading cache:", e);
+  }
+  return null;
+}
+
+// Helper function to save data to cache
+function saveCacheData(cacheKey, data) {
+  try {
+    localStorage.setItem(
+      cacheKey,
+      JSON.stringify({
+        timestamp: new Date().getTime(),
+        data: data,
+      })
+    );
+  } catch (e) {
+    console.error("Error saving cache:", e);
+  }
+}
+
 // Currency Converter Elements
 const fromCurrency = document.getElementById("from-currency");
 const toCurrency = document.getElementById("to-currency");
@@ -209,46 +263,87 @@ let chartData = {
 };
 
 async function fetchHistoricalRates(days) {
-  try {
-    const from = fromCurrency.value.toLowerCase();
-    const to = toCurrency.value.toLowerCase();
-    const dates = [];
-    const rates = [];
+  const from = fromCurrency.value.toLowerCase();
+  const to = toCurrency.value.toLowerCase();
 
-    // Generate dates for the requested period
-    const today = new Date();
-    for (let i = days - 1; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      const dateStr = date.toISOString().split("T")[0];
-      dates.push(dateStr);
+  // Check browser localStorage cache first
+  const cacheKey = getCacheKey(from, to, days);
+  const cachedData = getCachedData(cacheKey);
+
+  if (cachedData) {
+    console.log(`✓ Loaded ${from}/${to} data from localStorage (${days} days)`);
+    return cachedData;
+  }
+
+  try {
+    // Try to load from static cache file first
+    const cacheFile = `cache/${from}_${to}.json`;
+    console.log(`📁 Attempting to load from cache file: ${cacheFile}`);
+
+    let fileData = null;
+    try {
+      const response = await fetch(cacheFile);
+      if (response.ok) {
+        fileData = await response.json();
+        console.log(`✓ Loaded ${from}/${to} from static cache file`);
+      }
+    } catch (e) {
+      console.log(`ℹ Cache file not available, falling back to API`);
     }
 
-    // Fetch rates for all dates
-    for (const dateStr of dates) {
-      try {
-        // Try primary API
-        let response = await fetch(
-          `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@${dateStr}/v1/currencies/${from}.json`
-        );
+    let dates = [];
+    let rates = [];
 
-        // Fallback if specific date not available
-        if (!response.ok) {
-          response = await fetch(`${API_URL}/currencies/${from}.json`);
+    if (fileData && fileData.dates && fileData.rates) {
+      // Use file data
+      dates = fileData.dates;
+      rates = fileData.rates;
+      console.log(`✓ Using cached data: ${rates.length} rates available`);
+    } else {
+      // Fetch from API if cache file doesn't exist
+      console.log(`🔄 Fetching ${from}/${to} from API...`);
+
+      // Generate dates for the requested period
+      const today = new Date();
+      for (let i = days - 1; i >= 0; i--) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        const dateStr = date.toISOString().split("T")[0];
+        dates.push(dateStr);
+      }
+
+      // Fetch rates for all dates
+      for (const dateStr of dates) {
+        try {
+          // Try primary API
+          let response = await fetch(
+            `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@${dateStr}/v1/currencies/${from}.json`
+          );
+
+          // Fallback if specific date not available
+          if (!response.ok) {
+            response = await fetch(`${API_URL}/currencies/${from}.json`);
+          }
+
+          const data = await response.json();
+          const rateData = data[from];
+
+          if (rateData && rateData[to]) {
+            rates.push(rateData[to]);
+          }
+        } catch (e) {
+          console.log(`Could not fetch rate for ${dateStr}`);
         }
-
-        const data = await response.json();
-        const rateData = data[from];
-
-        if (rateData && rateData[to]) {
-          rates.push(rateData[to]);
-        }
-      } catch (e) {
-        console.log(`Could not fetch rate for ${dateStr}`);
       }
     }
 
-    return { dates: dates.slice(-rates.length), rates };
+    const result = { dates: dates.slice(-rates.length), rates };
+
+    // Save to browser localStorage for future use
+    saveCacheData(cacheKey, result);
+    console.log(`✓ Cached ${from}/${to} in localStorage (${days} days)`);
+
+    return result;
   } catch (error) {
     console.error("Error fetching historical rates:", error);
     return { dates: [], rates: [] };

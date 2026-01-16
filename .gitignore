@@ -1,0 +1,9 @@
+# System files
+.DS_Store
+.vscode/settings.json
+
+# IDE
+*.swp
+*.swo
+*~
+.env.local
