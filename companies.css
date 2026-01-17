@@ -123,27 +123,129 @@
 
       /* Responsive */
       @media (max-width: 768px) {
-        .card {
-          margin: 20px;
-          padding: 16px;
+        body {
+          font-size: 14px;
         }
 
-        .iframe-container {
-          height: 500px;
-        }
-      }
-
-      @media (max-width: 600px) {
         .card {
           margin: 15px;
           padding: 16px;
         }
 
+        .card:first-child {
+          margin-top: 15px;
+        }
+
         .card h3 {
-          font-size: 16px;
+          font-size: 17px;
+          margin-bottom: 16px;
         }
 
         .iframe-container {
-          height: 400px;
+          margin-bottom: 20px;
+          border-radius: 6px;
+        }
+
+        .link-card {
+          padding: 30px;
+          margin: 15px;
+        }
+
+        .link-card h4 {
+          font-size: 18px;
+          margin-bottom: 8px;
+        }
+
+        .link-card p {
+          font-size: 13px;
+          margin-bottom: 12px;
+        }
+
+        .price-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        body {
+          font-size: 13px;
+          min-height: 95vh;
+        }
+
+        .card {
+          margin: 10px;
+          padding: 12px;
+          border-radius: 6px;
+        }
+
+        .card:first-child {
+          margin-top: 10px;
+        }
+
+        .card h3 {
+          font-size: 16px;
+          margin-bottom: 12px;
+        }
+
+        .card p {
+          font-size: 12px;
+        }
+
+        .iframe-container {
+          margin-bottom: 16px;
+          border-radius: 6px;
+        }
+
+        .link-card {
+          padding: 20px;
+          margin: 10px;
+          border-radius: 6px;
+        }
+
+        .link-card h4 {
+          font-size: 16px;
+          margin-bottom: 6px;
+        }
+
+        .link-card p {
+          font-size: 12px;
+          margin-bottom: 10px;
+        }
+
+        .link-card .button {
+          padding: 8px 16px;
+          font-size: 12px;
+          border-radius: 3px;
+        }
+
+        .price-grid {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+      }
+
+      @media (max-width: 400px) {
+        .card {
+          margin: 8px;
+          padding: 10px;
+          min-height: 95vh;
+        }
+
+        .card h3 {
+          font-size: 14px;
+        }
+
+        .link-card {
+          padding: 16px;
+          margin: 8px;
+        }
+
+        .link-card h4 {
+          font-size: 14px;
+        }
+
+        .link-card p {
+          font-size: 11px;
         }
       }
