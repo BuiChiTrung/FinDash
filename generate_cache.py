@@ -19,7 +19,7 @@ DAYS_TO_FETCH = 365 * 1  # 2 years
 
 # Currency pairs to cache
 # Generate all combinations of available currencies
-CURRENCIES = ["twd", "usd", "eur", "gbp", "jpy", "cny", "vnd", "aud", "cad", "chf"]
+CURRENCIES = ["twd", "usd", "eur", "gbp", "jpy", "cny", "vnd", "aud", "cad", "chf", "sgd"]
 CURRENCY_PAIRS = [
     (curr1, curr2) 
     for curr1 in CURRENCIES 

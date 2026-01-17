@@ -67,6 +67,7 @@ const currencyData = {
   AUD: { flag: "🇦🇺", name: "Australian Dollar" },
   CAD: { flag: "🇨🇦", name: "Canadian Dollar" },
   CHF: { flag: "🇨🇭", name: "Swiss Franc" },
+  SGD: { flag: "🇸🇬", name: "Singapore Dollar" },
 };
 
 const currencyList = Object.keys(currencyData);
