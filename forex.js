@@ -5,36 +5,19 @@ const API_FALLBACK = "https://latest.currency-api.pages.dev/v1";
 
 // Cache Configuration
 const CACHE_KEY_PREFIX = "findash_forex_cache_";
-const CACHE_EXPIRY_DAYS = 1; // Cache expires after 1 day
 
 // Helper function to generate cache key for a currency pair
 function getCacheKey(from, to, days) {
   return `${CACHE_KEY_PREFIX}${from}_${to}_${days}`;
 }
 
-// Helper function to check if cache is still valid
-function isCacheValid(cacheKey) {
-  const cached = localStorage.getItem(cacheKey);
-  if (!cached) return false;
-
-  try {
-    const data = JSON.parse(cached);
-    const cacheTime = data.timestamp;
-    const now = new Date().getTime();
-    const expiryTime = CACHE_EXPIRY_DAYS * 24 * 60 * 60 * 1000;
-
-    return now - cacheTime < expiryTime;
-  } catch (e) {
-    return false;
-  }
-}
-
-// Helper function to get cached data
+// Helper function to get cached data (cache never expires)
 function getCachedData(cacheKey) {
   try {
     const cached = localStorage.getItem(cacheKey);
-    if (cached && isCacheValid(cacheKey)) {
-      return JSON.parse(cached).data;
+    if (cached) {
+      const data = JSON.parse(cached);
+      return data.data;
     }
   } catch (e) {
     console.error("Error reading cache:", e);

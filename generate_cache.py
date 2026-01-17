@@ -15,19 +15,16 @@ import time
 API_URL = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1"
 API_FALLBACK = "https://latest.currency-api.pages.dev/v1"
 CACHE_DIR = "cache"
-DAYS_TO_FETCH = 365  # 1 year of data
+DAYS_TO_FETCH = 365 * 1  # 2 years
 
 # Currency pairs to cache
+# Generate all combinations of available currencies
+CURRENCIES = ["twd", "usd", "eur", "gbp", "jpy", "cny", "vnd", "aud", "cad", "chf"]
 CURRENCY_PAIRS = [
-    ("twd", "usd"),
-    ("twd", "vnd"),
-    ("eur", "usd"),
-    ("gbp", "usd"),
-    ("jpy", "usd"),
-    ("usd", "cny"),
-    ("usd", "eur"),
-    ("usd", "gbp"),
-    ("usd", "jpy"),
+    (curr1, curr2) 
+    for curr1 in CURRENCIES 
+    for curr2 in CURRENCIES 
+    if curr1 != curr2  # Exclude same currency pairs
 ]
 
 def create_cache_dir():
