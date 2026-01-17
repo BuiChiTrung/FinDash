@@ -278,10 +278,16 @@ async function fetchHistoricalRates(days) {
     let rates = [];
 
     if (fileData && fileData.dates && fileData.rates) {
-      // Use file data
-      dates = fileData.dates;
-      rates = fileData.rates;
-      console.log(`✓ Using cached data: ${rates.length} rates available`);
+      // Use file data but filter to requested period
+      const allDates = fileData.dates;
+      const allRates = fileData.rates;
+
+      // Get only the last 'days' worth of data
+      dates = allDates.slice(-days);
+      rates = allRates.slice(-days);
+      console.log(
+        `✓ Using cached data: ${rates.length} rates for last ${days} days`
+      );
     } else {
       // Fetch from API if cache file doesn't exist
       console.log(`🔄 Fetching ${from}/${to} from API...`);
