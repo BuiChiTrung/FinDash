@@ -1,6 +1,11 @@
 // Free Currency Exchange API Configuration (github.com/fawazahmed0/exchange-api)
-const API_URL =
-  "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1";
+// Get today's date in YYYY-MM-DD format
+function getTodayDateString() {
+  const today = new Date();
+  return today.toISOString().split("T")[0];
+}
+
+const API_URL = `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@${getTodayDateString()}/v1`;
 const API_FALLBACK = "https://latest.currency-api.pages.dev/v1";
 
 // Currency Converter Elements
@@ -42,7 +47,13 @@ async function fetchRateFromAPI(url) {
 
     // Fallback to alternate API if primary fails
     if (!response.ok) {
-      const fallbackUrl = url.replace(API_URL, API_FALLBACK);
+      // Replace the date-based API with fallback
+      const fallbackUrl = url.replace(
+        /https:\/\/cdn\.jsdelivr\.net\/npm\/@fawazahmed0\/currency-api@[\d\-]+\/v1/,
+        API_FALLBACK
+      );
+
+      console.log(`Primary API failed, trying fallback: ${fallbackUrl}`);
       response = await fetch(fallbackUrl);
     }
 
@@ -124,6 +135,10 @@ async function fetchExchangeRate() {
     const from = fromCurrency.value.toLowerCase();
     const to = toCurrency.value.toLowerCase();
 
+    console.log(
+      `📊 Fetching exchange rate for ${from.toUpperCase()} to ${to.toUpperCase()}...`
+    );
+
     const data = await fetchRateFromAPI(`${API_URL}/currencies/${from}.json`);
 
     if (!data) {
@@ -134,11 +149,17 @@ async function fetchExchangeRate() {
 
     if (rates && rates[to]) {
       currentRate = rates[to];
+      console.log(`✓ Exchange rate retrieved: ${currentRate}`);
       exchangeRateDisplay.textContent = currentRate.toFixed(2);
       rateUnit.textContent = `${to.toUpperCase()} per 1 ${from.toUpperCase()}`;
       rateInfo.textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
       updateConversion();
     } else {
+      console.error(
+        `Rate data missing: rates=${!!rates}, rates[${to}]=${
+          rates ? rates[to] : "N/A"
+        }`
+      );
       throw new Error("Currency rate not found");
     }
   } catch (error) {
@@ -264,7 +285,6 @@ async function fetchHistoricalRates(days) {
         date.setDate(date.getDate() + i);
         requiredDates.push(date.toISOString().split("T")[0]);
       }
-      console.log(requiredDates);
 
       // Filter cached data to match required date range
       const allDates = fileData.dates;
